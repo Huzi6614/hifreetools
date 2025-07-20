@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="1080" height="640" viewBox="0 0 1080 640">
+  <defs>
+    <linearGradient id="linear-gradient" x1="0.044" y1="0.12" x2="0.62" y2="0.723" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#ffc9f3"/>
+      <stop offset="1" stop-color="#cac9ff"/>
+    </linearGradient>
+    <filter id="Rectangle_195" x="20" y="21" width="960" height="560" filterUnits="userSpaceOnUse">
+      <feOffset dy="1" input="SourceAlpha"/>
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feFlood flood-opacity="0.2"/>
+      <feComposite operator="in" in2="blur"/>
+      <feComposite in="SourceGraphic"/>
+    </filter>
+    <linearGradient id="linear-gradient-2" y1="0.5" x2="1" y2="0.5" gradientUnits="objectBoundingBox">
+      <stop offset="0" stop-color="#f7c9f4"/>
+      <stop offset="1" stop-color="#cac9ff"/>
+    </linearGradient>
+  </defs>
+  <g id="Group_492" data-name="Group 492" transform="translate(-460 -2935)">
+    <g id="Group_484" data-name="Group 484" transform="translate(3220 -178.306)" opacity="0.5" style="isolation: isolate">
+      <path id="Rectangle_124" data-name="Rectangle 124" d="M0,0H176.267A176.267,176.267,0,0,1,352.534,176.267v1.466A176.267,176.267,0,0,1,176.267,354h0A176.267,176.267,0,0,1,0,177.733V0A0,0,0,0,1,0,0Z" transform="translate(-2058 3399.306)" fill="#f0f0f0"/>
+      <path id="Polygon_1" data-name="Polygon 1" d="M51.591,0l51.591,51.845H0Z" transform="translate(-1722.217 3524.681) rotate(-135)" fill="#cac9ff"/>
+      <path id="Polygon_2" data-name="Polygon 2" d="M26.177,0,52.353,26.431H0Z" transform="translate(-1698.689 3468.917) rotate(-135)" fill="#fec9f3"/>
+      <path id="Rectangle_125" data-name="Rectangle 125" d="M86.975,0h.608a0,0,0,0,1,0,0V86.975a0,0,0,0,1,0,0H0a0,0,0,0,1,0,0v0A86.975,86.975,0,0,1,86.975,0Z" transform="translate(-2052.526 3666.331)" fill="#faaac3"/>
+    </g>
+    <g id="Group_483" data-name="Group 483" transform="translate(0 -30)">
+      <path id="Path_342" data-name="Path 342" d="M0,0H1000V600H0Z" transform="translate(460 2965)" fill="url(#linear-gradient)"/>
+      <g transform="matrix(1, 0, 0, 1, 460, 2965)" filter="url(#Rectangle_195)">
+        <rect id="Rectangle_195-2" data-name="Rectangle 195" width="900" height="500" transform="translate(50 50)" fill="#fff"/>
+      </g>
+      <g id="Group_482" data-name="Group 482">
+        <circle id="Ellipse_41" data-name="Ellipse 41" cx="100" cy="100" r="100" transform="translate(860 3165)" fill="url(#linear-gradient-2)"/>
+        <circle id="Ellipse_42" data-name="Ellipse 42" cx="75" cy="75" r="75" transform="translate(885 3190)"/>
+        <path id="Path_343" data-name="Path 343" d="M0,0,50,30,0,60Z" transform="translate(941 3235)" fill="#fff"/>
+      </g>
+    </g>
+  </g>
+</svg>
