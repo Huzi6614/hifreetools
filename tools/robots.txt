@@ -1,6 +1,0 @@
-User-agent: *
-User-agent: GoogleBot
-Disallow: /*?u_src=*
-Disallow: /cdn-cgi/*
-Allow: /
-Sitemap: https://histream.me/tools/sitemap.xml

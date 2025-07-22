@@ -1,7 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="24" height="16.552" viewBox="0 0 24 16.552">
-  <g id="germany" transform="translate(0.001 0.001)">
-    <path id="Path_1492" data-name="Path 1492" d="M18.62,16.551h4.552A.828.828,0,0,0,24,15.724V.827A.828.828,0,0,0,23.172,0H.827A.828.828,0,0,0,0,.827v14.9a.827.827,0,0,0,.828.827H18.62Zm0,0" fill="#2c2f38"/>
-    <path id="Path_1493" data-name="Path 1493" d="M24,238.344V242.9a.83.83,0,0,1-.828.827H.827A.83.83,0,0,1,0,242.9v-4.552H24Zm0,0" transform="translate(0 -227.172)" fill="#f0c419"/>
-    <path id="Path_1494" data-name="Path 1494" d="M0,114.758H24v5.793H0Zm0,0" transform="translate(-0.001 -109.379)" fill="#c03a2b"/>
-  </g>
-</svg>
