@@ -4,10 +4,8 @@
   <meta charset="UTF-8" />
   <title>HiStream</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <!-- Favicon -->
   <link rel="icon" href="https://histream.me/favicons/favicon.png" type="image/x-icon">
   <style>
-    /* existing CSS unchanged */
     body {
       background: #0f0f0f;
       color: #00ffe7;
@@ -34,7 +32,7 @@
       text-shadow: 0 0 10px #00ffd5;
     }
     .container {
-      max-width: 700px;
+      max-width: 1200px;
       margin: auto;
       padding: 20px;
       position: relative;
@@ -51,76 +49,92 @@
       color: #0ff;
       box-shadow: 0 0 10px #00ffd5;
     }
+
+    /* GRID STYLE FOR VIDEO CARDS */
+    #videoList {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 15px;
+      justify-content: center;
+    }
     .link-card {
-      background: #181818;
-      margin: 10px 0;
-      padding: 15px;
+      background: #000;
+      color: #fff;
+      width: 200px;
       border-radius: 12px;
-      box-shadow: 0 0 12px #00ffd5aa;
-      position: relative;
+      overflow: hidden;
+      box-shadow: 0 0 12px #fff3;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      padding: 10px;
+      text-align: center;
+      border: 1px solid #fff;
+    }
+    .link-card img {
+      width: 100%;
+      height: 120px;
+      object-fit: cover;
+      filter: grayscale(100%);
+    }
+    .link-card h3 {
+      margin: 10px 0 8px;
+      font-size: 16px;
+      color: #fff;
     }
     .link-card button {
-      background: #00ffd5;
+      background: #fff;
+      color: #000;
       border: none;
       padding: 8px 15px;
       border-radius: 5px;
       cursor: pointer;
       font-weight: bold;
-      margin-top: 10px;
-      color: #000;
-      transition: 0.2s;
       width: 100%;
-      text-align: left;
-      display: flex;
-      align-items: center;
-      gap: 10px;
+      margin-top: 8px;
     }
     .link-card button:hover {
-      background: #ff0080;
-      color: #fff;
+      background: #ccc;
     }
     .video-wrapper,
     .skip-button,
     .status-box {
       display: none;
       margin-top: 10px;
-    }
-    .video-wrapper {
       width: 100%;
-      height: 360px;
     }
     iframe.video-frame {
       width: 100%;
-      height: 100%;
+      height: 150px;
       border: none;
-      border-radius: 12px;
+      border-radius: 8px;
     }
     .skip-button button {
-      background: #ff0080;
-      padding: 10px 20px;
-      border-radius: 8px;
-      font-weight: bold;
+      background: #fff;
+      color: #000;
       border: none;
-      color: #fff;
-      box-shadow: 0 0 12px #ff0080aa;
+      padding: 8px 15px;
+      border-radius: 5px;
+      font-weight: bold;
       cursor: pointer;
+      width: 100%;
     }
     .progress-bar {
       width: 0%;
-      height: 10px;
-      background: #00ffd5;
-      border-radius: 5px;
-      margin-top: 10px;
+      height: 6px;
+      background: #fff;
+      border-radius: 3px;
+      margin-top: 5px;
       transition: width 1s linear;
     }
     .guide, .status-box {
       background: #222;
-      color: #00ffd5;
+      color: #fff;
       padding: 10px;
       margin-top: 10px;
       border-radius: 5px;
       text-align: center;
-      box-shadow: 0 0 10px #00ffd5;
+      box-shadow: 0 0 10px #fff;
     }
     .banner-ad-top, .banner-ad-bottom {
       text-align: center;
@@ -131,7 +145,6 @@
 <body>
 <div class="cursor" id="cursor"></div>
 
-<!-- existing HTML structure unchanged -->
 <div class="banner-ad-top">
   <script src="https://fpyf8.com/88/tag.min.js" data-zone="150231" async data-cfasync="false"></script>
 </div>
@@ -158,8 +171,9 @@ const directAdUrls = [
   "https://otieu.com/4/9545167"
 ];
 
-// Example: added 'link' property to test link-only button
 const videos = [
+  // same videos array from your code
+  // ...
   {
     title: "Squid Game Season 3 Hindi",
     embedDirect: "https://drive.google.com/file/d/13PksoZkAgs2SB45wfBB2TlNjgV1EfgOf/preview",
@@ -316,7 +330,6 @@ const videos = [
     embedDirect: "",
     thumbnail: "https://via.placeholder.com/150"
   },
-  
 ];
 
 function renderVideos(list = videos) {
@@ -326,10 +339,9 @@ function renderVideos(list = videos) {
     const card = document.createElement("div");
     card.className = "link-card";
     card.innerHTML = `
-      <button onclick="handleButtonClick(${i})">
-        <img src="${vid.thumbnail}" style="width:40px;height:40px;object-fit:cover;border-radius:5px;">
-        ${vid.title}
-      </button>
+      <h3>${vid.title}</h3>
+      <img src="${vid.thumbnail}">
+      <button onclick="handleButtonClick(${i})">Watch Now</button>
       <div class="video-wrapper">
         <iframe class="video-frame" allowfullscreen data-src="${vid.embedDirect || ''}"></iframe>
       </div>
@@ -343,7 +355,6 @@ function renderVideos(list = videos) {
   });
 }
 
-// new unified button handler
 function handleButtonClick(index) {
   const vid = videos[index];
   if (vid.link && !vid.embedDirect) {
@@ -375,6 +386,7 @@ function toggleVideo(index, btn) {
     statusDiv.style.display = "block";
   }
 }
+
 function triggerAd() {
   if (!areAdsEnabled()) return;
   const now = Date.now();
@@ -437,25 +449,6 @@ function hideAllAds() {
   document.querySelectorAll('.banner-ad-top, .banner-ad-bottom').forEach(el => el.style.display = 'none');
 }
 
-function handleGlobalTrigger() {
-  if (areAdsEnabled()) triggerAd();
-}
-
-document.addEventListener("click", handleGlobalTrigger);
-document.addEventListener("touchstart", handleGlobalTrigger);
-document.addEventListener("fullscreenchange", handleGlobalTrigger);
-
-setInterval(() => {
-  const iframes = document.querySelectorAll("iframe");
-  iframes.forEach(iframe => {
-    try {
-      if (document.activeElement === iframe) {
-        handleGlobalTrigger();
-      }
-    } catch (err) {}
-  });
-}, 1000);
-
 document.addEventListener("mousemove", e => {
   const cursor = document.getElementById("cursor");
   cursor.style.left = e.clientX + "px";
@@ -466,25 +459,6 @@ window.onload = () => {
   renderVideos();
   if (!areAdsEnabled()) hideAllAds();
 };
-</script>
-<script>
- function toggleSocialBar(show) {
-   const script = document.getElementById("social-bar-script");  
-   if (script) script.style.display = show ? "block" : "none";
-  }
-  window.addEventListener("load", () => {
-    const isAdEnabled = !localStorage.getItem("skipAdUntil") || Date.now() > parseInt(localStorage.getItem("skipAdUntil"));
-    if (isAdEnabled) {
-      const s = document.createElement('script');
-      s.src = "//pl27105537.profitableratecpm.com/95/c8/c7/95c8c70bc6a8eec8e0ff1483b690c97c.js";
-      s.type = "text/javascript";
-      s.id = "social-bar-script";
-      document.body.appendChild(s);
- }
-  });
-
-// rest of your JS unchanged...
-// (triggerAd, areAdsEnabled, startSkipProcess, filterVideos, hideAllAds, handleGlobalTrigger, cursor, window.onload, etc.)
 </script>
 </body>
 </html>
