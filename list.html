@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>HiStream</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Favicon -->
+  <link rel="icon" href="https://histream.me/favicons/favicon.png" type="image/x-icon">
+  <style>
+    /* existing CSS unchanged */
+    body {
+      background: #0f0f0f;
+      color: #00ffe7;
+      font-family: 'Segoe UI', sans-serif;
+      margin: 0;
+      cursor: none;
+    }
+    .cursor {
+      width: 20px;
+      height: 20px;
+      border: 2px solid #00ffd5;
+      border-radius: 50%;
+      position: fixed;
+      transform: translate(-50%, -50%);
+      pointer-events: none;
+      z-index: 9999;
+      transition: 0.1s ease;
+    }
+    .header {
+      text-align: center;
+      font-size: 40px;
+      margin-top: 20px;
+      color: #00ffd5;
+      text-shadow: 0 0 10px #00ffd5;
+    }
+    .container {
+      max-width: 700px;
+      margin: auto;
+      padding: 20px;
+      position: relative;
+      z-index: 1;
+    }
+    .search-bar {
+      width: 100%;
+      padding: 10px;
+      border-radius: 8px;
+      border: none;
+      margin-bottom: 15px;
+      font-size: 16px;
+      background: #111;
+      color: #0ff;
+      box-shadow: 0 0 10px #00ffd5;
+    }
+    .link-card {
+      background: #181818;
+      margin: 10px 0;
+      padding: 15px;
+      border-radius: 12px;
+      box-shadow: 0 0 12px #00ffd5aa;
+      position: relative;
+    }
+    .link-card button {
+      background: #00ffd5;
+      border: none;
+      padding: 8px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      font-weight: bold;
+      margin-top: 10px;
+      color: #000;
+      transition: 0.2s;
+      width: 100%;
+      text-align: left;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .link-card button:hover {
+      background: #ff0080;
+      color: #fff;
+    }
+    .video-wrapper,
+    .skip-button,
+    .status-box {
+      display: none;
+      margin-top: 10px;
+    }
+    .video-wrapper {
+      width: 100%;
+      height: 360px;
+    }
+    iframe.video-frame {
+      width: 100%;
+      height: 100%;
+      border: none;
+      border-radius: 12px;
+    }
+    .skip-button button {
+      background: #ff0080;
+      padding: 10px 20px;
+      border-radius: 8px;
+      font-weight: bold;
+      border: none;
+      color: #fff;
+      box-shadow: 0 0 12px #ff0080aa;
+      cursor: pointer;
+    }
+    .progress-bar {
+      width: 0%;
+      height: 10px;
+      background: #00ffd5;
+      border-radius: 5px;
+      margin-top: 10px;
+      transition: width 1s linear;
+    }
+    .guide, .status-box {
+      background: #222;
+      color: #00ffd5;
+      padding: 10px;
+      margin-top: 10px;
+      border-radius: 5px;
+      text-align: center;
+      box-shadow: 0 0 10px #00ffd5;
+    }
+    .banner-ad-top, .banner-ad-bottom {
+      text-align: center;
+      margin: 10px auto;
+    }
+  </style>
+</head>
+<body>
+<div class="cursor" id="cursor"></div>
+
+<!-- existing HTML structure unchanged -->
+<div class="banner-ad-top">
+  <script async data-cfasync="false" src="//pl27092940.profitableratecpm.com/7e6714a3cc476d1dce5ef542c4ddc374/invoke.js"></script>
+  <div id="container-7e6714a3cc476d1dce5ef542c4ddc374"></div>
+</div>
+
+<div class="header">HiStream</div>
+
+<div class="container">
+  <div class="guide">
+    🎥 Ads open in new tab - wait 20s and return<br>
+    🚀 Click anywhere → stay 20s → All ads off for 30 min.<br>
+    ❌ Leave early = no skip.
+  </div>
+  <input type="text" class="search-bar" placeholder="Search videos..." oninput="filterVideos(this.value)">
+  <div id="videoList"></div>
+</div>
+
+<div class="banner-ad-bottom">
+  <script async data-cfasync="false" src="//pl27092940.profitableratecpm.com/7e6714a3cc476d1dce5ef542c4ddc374/invoke.js"></script>
+  <div id="container-7e6714a3cc476d1dce5ef542c4ddc374"></div>
+</div>
+
+<script>
+const directAdUrls = [
+  "https://www.profitableratecpm.com/i08tb7ztk?key=dc81cf5999e25395bd59ebffcc4962b1",
+  "https://www.profitableratecpm.com/m3he7009?key=067bc9020429ebbf5b00e7d7557a24a4"
+];
+
+// Example: added 'link' property to test link-only button
+const videos = [
+  {
+    title: "Squid Game Season 3 Hindi",
+    embedDirect: "https://drive.google.com/file/d/13PksoZkAgs2SB45wfBB2TlNjgV1EfgOf/preview",
+    thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSZaxWSjOe5KHTAle5vvi15jQb1JFZNdZFsIA&s"
+  },
+  {
+    title: "Ballerina Hindi Dub",
+    embedDirect: "https://drive.google.com/file/d/1UpdH0p1LmevhWtyxCsFMXrKpFZJVDaCz/preview",
+    thumbnail: "https://lh5.googleusercontent.com/proxy/HvpFxh1xSvI7_9iIRdwUMs-t6-7xLdUwPWNBVp4p8cLRH0eZbIm6k3LQQb9j1HRs2VU8kmOgA2ER1tGv4klIkM1fYWXNRMIOCECaFQ"
+  },
+  {
+    title: "The Family Star Hindi",
+    embedDirect: "https://drive.google.com/file/d/18ecN-mj5L8PXq2JfbhH1DAcMmx1yy5EO/preview",
+    thumbnail: "https://upload.wikimedia.org/wikipedia/en/1/1d/Family_Star_Poster.png"
+  },
+  {
+    title: "Housefull 5 Hindi ",
+    embedDirect: "https://drive.google.com/file/d/10NjN8GHmUqcC-cxt_liUNGjFdyGLTiQ5/preview",
+    thumbnail: "https://m.media-amazon.com/images/M/MV5BZmIzMThjNTYtNjkwZi00NmM3LTliNGItZWIxYTUwMGU1YzM0XkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+  },
+  {
+    title: "How to train your dragon: The Hidden world Hindi",
+    embedDirect: "https://drive.google.com/file/d/18Bt7_lrE0kfuwGoI53thTm1RPhe5iy_H/preview",
+    thumbnail: "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRqUWLifu5PyIa95I_ZOO0AMRb-nk7ae8ebQA&s"
+  },
+  {
+    title: "Sonic the hedgehog 1 Hindi",
+    embedDirect: "https://drive.google.com/file/d/1Y4A_fafw6eEGbXNGNVJPrQN_Bxt5R-RE/preview",
+    thumbnail: "https://m.media-amazon.com/images/M/MV5BYTg2Yjc5MzItNzVmMi00MTllLWI2MDQtOTYyOWNjYWIxNzEzXkEyXkFqcGc@._V1_.jpg"
+  },
+  {
+    title: "Sonic the hedgehog 2 Hindi",
+    embedDirect: "https://drive.google.com/file/d/1g-5VaKQsDa4AjqkBI8PRy_XqDJkzj15v/preview",
+    thumbnail: "https://m.media-amazon.com/images/M/MV5BMDBiYzk0YTMtNWRiYi00YWY0LWE3NjgtYmJiYTAwZmYzOTM0XkEyXkFqcGc@._V1_.jpg"
+  },
+  {
+    title: "Sonic the hedgehog 3 Hindi",
+    embedDirect: "https://drive.google.com/file/d/1lJtwHpgTvYSoZxlMmOgfeCmDUdPQh8fj/preview",
+    thumbnail: "https://m.media-amazon.com/images/M/MV5BMjZjNjE5NDEtOWJjYS00Mjk2LWI1ZDYtOWI1ZWI3MzRjM2UzXkEyXkFqcGc@._V1_FMjpg_UX1000_.jpg"
+  },
+  {
+    title: "Thandel Hindi",
+    embedDirect: "https://drive.google.com/file/d/1CGA0sjtfVqKGIWJ3CBDnsM3adnUsZEPX/preview",
+    thumbnail: "https://encrypted-tbn1.gstatic.com/images?q=tbn:ANd9GcQgkqNCzemsxbcoVGW-8mc8S9f_GAmy77-OWCRhlNyUuuJDcnA7SJPEH1TgIuE7jfbKQ1qosw"
+  },
+  {
+    title: "Game Changer Hindi",
+    embedDirect: "https://drive.google.com/file/d/1F5miYtk368cngiQ2Uhjzmh6PD963A6tP/preview",
+    thumbnail: "https://m.media-amazon.com/images/S/pv-target-images/e171501823be87e149188a913fd3322d2e0a691d09a658e53013cde3989328ca.jpg"
+  },
+  {
+    title: "L2:Empuraan Hindi",
+    embedDirect: "https://drive.google.com/file/d/1Hz9Qlh61MZeneH3ZmgNLjKraKgAMTmOO/preview",
+    thumbnail: "https://upload.wikimedia.org/wikipedia/en/3/35/L2_-_Empuraan_poster.jpg"
+  },
+  {
+    title: "Raid 2 Hindi",
+    embedDirect: "https://drive.google.com/file/d/1GwxHACz5DrxxdnlUy93PTmzco2JtLHvy/preview",
+    thumbnail: "https://bollyspice.com/wp-content/uploads/2025/04/30x40-RAID2-FACEOFF-ENSMBLE_AW1-scaled.jpeg"
+  },
+  {
+    title: "Spiderman Homecoming Hindi",
+    embedDirect: "https://drive.google.com/file/d/1V6ixZ8KC7LFe4InFTD9IahOgiR2SyEqM/preview",
+    thumbnail: "https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p12798844_p_v8_ao.jpg"
+  },
+  {
+    title: "Student of the year 2 Hindi",
+    embedDirect: "https://drive.google.com/file/d/1GPXU3MwtB-cQthznQ636E55uMIqglLI5/preview",
+    thumbnail: "https://upload.wikimedia.org/wikipedia/en/3/3c/Student_of_the_year_2_Poster.jpg"
+  },
+  {
+    title: "the accountant 2 Hindi",
+    embedDirect: "https://drive.google.com/file/d/18hlEBibGUIk9EiGr-eBggXxO7p1yowY6/preview",
+    thumbnail: "https://resizing.flixster.com/uryKtE0AZYs_so1mlw1yPA3pdSE=/ems.cHJkLWVtcy1hc3NldHMvbW92aWVzLzkwMmRlYWIzLThiNTQtNGIyZi05ODRlLWMxZDM3ZmY2ZTU4My5qcGc="
+  },
+  {
+    title: "Raid Hindi",
+    embedDirect: "https://drive.google.com/file/d/1IM1zqx0G_IvUP-Ebz0OEYzqQW8UNW4Q4/preview",
+    thumbnail: "https://upload.wikimedia.org/wikipedia/en/2/28/Ajay_Devgn%27s_Raid_poster.jpg"
+  },
+  {
+    title: "Good boy Episode 1 hindi",
+    embedDirect: "https://drive.google.com/file/d/1Y9QDR_GY2zeAzZzh4dhhUL4HyrXEuaOb/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 2 hindi",
+    embedDirect: "https://drive.google.com/file/d/1W0KYawo7_fyggcWIREoDWY50fMTfKzPz/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 3 hindi",
+    embedDirect: "https://drive.google.com/file/d/1TtR_zP5O0_IAL7i3GcPiTb2XKz3iLv0K/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 4 hindi",
+    embedDirect: "https://drive.google.com/file/d/1GEf7CxEALpMAV5eWngfJ6Amfm8VCZDt_/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 5 hindi",
+    embedDirect: "https://drive.google.com/file/d/1LyjhuuWFtiL8rWLpQiH1XhCxkbnSfavy/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 6 hindi",
+    embedDirect: "https://drive.google.com/file/d/1pKKzv9pfr73ivMXXfq2rdseCaSuYaiFy/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 7 hindi",
+    embedDirect: "https://drive.google.com/file/d/1-bR406Gaynf40A4T-cN1lCa-Nn2OEwch/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 8 hindi",
+    embedDirect: "https://drive.google.com/file/d/1Jm5aokCCZE8wgWDPesRXOWiuwkCBnG5x/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 9 hindi",
+    embedDirect: "https://drive.google.com/file/d/13Gx0f5HTHJvLY1Pyy_nlIL9fc9nsUEoI/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 10 hindi",
+    embedDirect: "https://drive.google.com/file/d/1NX6NeY7u142GY6Lc7dIIAa8VU07SNLkp/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 11 hindi",
+    embedDirect: "https://drive.google.com/file/d/1b8iOeh4Qe4b8v3ctPVV-ykBNkhYhXqU-/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 12 hindi",
+    embedDirect: "https://drive.google.com/file/d/1ouoPhUNyQ_ZRJ79KwPekBqzx18lh_3I0/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 13 hindi",
+    embedDirect: "https://drive.google.com/file/d/1lNCYmnl-dWAbYVM_xQZcqciN9JE7osf5/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Good boy Episode 14 hindi",
+    embedDirect: "https://drive.google.com/file/d/1lHF7_V6E58ZmOsUbGmlivKXOLqS4sdHI/preview",
+    thumbnail: "https://resizing.flixster.com/Rt3gHTJiWbG3E-YujZOxlC-KwKA=/fit-in/705x460/v2/https://resizing.flixster.com/-XZAfHZM39UwaGJIFWKAE8fS0ak=/v3/t/assets/p30240589_b_v9_aa.jpg"
+  },
+  {
+    title: "Example Link Only",
+    link: "https://example.com",
+    embedDirect: "",
+    thumbnail: "https://via.placeholder.com/150"
+  },
+  
+];
+
+function renderVideos(list = videos) {
+  const container = document.getElementById("videoList");
+  container.innerHTML = "";
+  list.forEach((vid, i) => {
+    const card = document.createElement("div");
+    card.className = "link-card";
+    card.innerHTML = `
+      <button onclick="handleButtonClick(${i})">
+        <img src="${vid.thumbnail}" style="width:40px;height:40px;object-fit:cover;border-radius:5px;">
+        ${vid.title}
+      </button>
+      <div class="video-wrapper">
+        <iframe class="video-frame" allowfullscreen data-src="${vid.embedDirect || ''}"></iframe>
+      </div>
+      <div class="skip-button">
+        <button onclick="startSkipProcess(this)">🚀 Skip Ads</button>
+        <div class="progress-bar"></div>
+      </div>
+      <div class="status-box"></div>
+    `;
+    container.appendChild(card);
+  });
+}
+
+// new unified button handler
+function handleButtonClick(index) {
+  const vid = videos[index];
+  if (vid.link && !vid.embedDirect) {
+    window.open(vid.link, "_blank");
+    return;
+  }
+  toggleVideo(index, document.querySelectorAll(".link-card button")[index]);
+}
+
+function toggleVideo(index, btn) {
+  const card = btn.parentElement;
+  const iframe = card.querySelector("iframe");
+  const wrapper = card.querySelector(".video-wrapper");
+  const skipDiv = card.querySelector(".skip-button");
+  const statusDiv = card.querySelector(".status-box");
+
+  document.querySelectorAll(".video-wrapper, .skip-button, .status-box").forEach(el => el.style.display = "none");
+
+  if (!iframe.src) iframe.src = iframe.dataset.src;
+  wrapper.style.display = "block";
+  iframe.style.display = "block";
+
+  if (areAdsEnabled()) {
+    skipDiv.style.display = "block";
+    triggerAd();
+  } else {
+    skipDiv.style.display = "none";
+    statusDiv.innerHTML = "✅ Ads skipped (active)";
+    statusDiv.style.display = "block";
+  }
+}
+function triggerAd() {
+  if (!areAdsEnabled()) return;
+  const now = Date.now();
+  if (now - lastAdClick >= adCooldown) {
+    lastAdClick = now;
+    const adUrl = directAdUrls[Math.floor(Math.random() * directAdUrls.length)];
+    window.open(adUrl, "_blank");
+  }
+}
+
+function areAdsEnabled() {
+  const skipTime = localStorage.getItem("skipAdUntil");
+  return !skipTime || Date.now() > parseInt(skipTime);
+}
+
+function startSkipProcess(btn) {
+  const skipDiv = btn.parentElement;
+  const statusDiv = skipDiv.nextElementSibling;
+  const progressBar = skipDiv.querySelector(".progress-bar");
+
+  const adUrl = directAdUrls[Math.floor(Math.random() * directAdUrls.length)];
+  const adWindow = window.open(adUrl, "_blank");
+
+  statusDiv.innerHTML = "⏳ Stay 20s on ad...";
+  statusDiv.style.display = "block";
+  progressBar.style.width = "0%";
+
+  let elapsed = 0;
+  const timer = setInterval(() => {
+    elapsed++;
+    progressBar.style.width = `${elapsed * 5}%`;
+    if (elapsed >= 20) {
+      clearInterval(timer);
+      localStorage.setItem("skipAdUntil", Date.now() + 30 * 60 * 1000);
+      statusDiv.innerHTML = "✅ Ads skipped for 30 minutes!";
+      skipDiv.style.display = "none";
+      hideAllAds();
+    }
+  }, 1000);
+
+  const checker = setInterval(() => {
+    if (adWindow.closed) {
+      clearInterval(checker);
+      if (elapsed < 20) {
+        clearInterval(timer);
+        progressBar.style.width = "0%";
+        statusDiv.innerHTML = "❌ You returned early. Try again.";
+      }
+    }
+  }, 500);
+}
+
+function filterVideos(query) {
+  const lower = query.toLowerCase();
+  const filtered = videos.filter(v => v.title.toLowerCase().includes(lower));
+  renderVideos(filtered);
+}
+
+function hideAllAds() {
+  document.querySelectorAll('.banner-ad-top, .banner-ad-bottom').forEach(el => el.style.display = 'none');
+}
+
+function handleGlobalTrigger() {
+  if (areAdsEnabled()) triggerAd();
+}
+
+document.addEventListener("click", handleGlobalTrigger);
+document.addEventListener("touchstart", handleGlobalTrigger);
+document.addEventListener("fullscreenchange", handleGlobalTrigger);
+
+setInterval(() => {
+  const iframes = document.querySelectorAll("iframe");
+  iframes.forEach(iframe => {
+    try {
+      if (document.activeElement === iframe) {
+        handleGlobalTrigger();
+      }
+    } catch (err) {}
+  });
+}, 1000);
+
+document.addEventListener("mousemove", e => {
+  const cursor = document.getElementById("cursor");
+  cursor.style.left = e.clientX + "px";
+  cursor.style.top = e.clientY + "px";
+});
+
+window.onload = () => {
+  renderVideos();
+  if (!areAdsEnabled()) hideAllAds();
+};
+</script>
+<script>
+ function toggleSocialBar(show) {
+   const script = document.getElementById("social-bar-script");  
+   if (script) script.style.display = show ? "block" : "none";
+  }
+  window.addEventListener("load", () => {
+    const isAdEnabled = !localStorage.getItem("skipAdUntil") || Date.now() > parseInt(localStorage.getItem("skipAdUntil"));
+    if (isAdEnabled) {
+      const s = document.createElement('script');
+      s.src = "//pl27105537.profitableratecpm.com/95/c8/c7/95c8c70bc6a8eec8e0ff1483b690c97c.js";
+      s.type = "text/javascript";
+      s.id = "social-bar-script";
+      document.body.appendChild(s);
+ }
+  });
+
+// rest of your JS unchanged...
+// (triggerAd, areAdsEnabled, startSkipProcess, filterVideos, hideAllAds, handleGlobalTrigger, cursor, window.onload, etc.)
+</script>
+</body>
+</html>
